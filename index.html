@@ -1,1 +1,787 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Argana Resort: From Overlooked to Undiscovered</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --sage-green: #8FBB9F;
+            --warm-cream: #F5F1E8;
+            --honey-gold: #D4A574;
+            --deep-char: #3D4E47;
+            --muted-green: #7BA89A;
+            --accent-gold: #C9A05F;
+        }
+
+        body {
+            font-family: 'Georgia', 'Garamond', serif;
+            background: var(--warm-cream);
+            color: var(--deep-char);
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 60px;
+            background: linear-gradient(135deg, var(--warm-cream) 0%, #f9f6f0 100%);
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            z-index: 10;
+        }
+
+        /* Slide Templates */
+        .slide.title-slide {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, var(--sage-green) 0%, var(--muted-green) 100%);
+            color: white;
+        }
+
+        .slide.title-slide h1 {
+            font-size: 4.5rem;
+            margin-bottom: 20px;
+            font-weight: normal;
+            letter-spacing: 2px;
+        }
+
+        .slide.title-slide p {
+            font-size: 1.8rem;
+            opacity: 0.95;
+            margin-bottom: 40px;
+        }
+
+        .slide.title-slide .tagline {
+            font-size: 2rem;
+            color: var(--honey-gold);
+            font-style: italic;
+        }
+
+        .slide.two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .slide.two-column .column {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide.two-column h2 {
+            font-size: 2.8rem;
+            color: var(--sage-green);
+            margin-bottom: 30px;
+            font-weight: normal;
+        }
+
+        .slide.two-column h3 {
+            font-size: 1.6rem;
+            color: var(--honey-gold);
+            margin-bottom: 15px;
+            font-weight: normal;
+        }
+
+        .slide.two-column p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: var(--deep-char);
+        }
+
+        .slide.two-column .image-placeholder {
+            width: 100%;
+            height: 550px;
+            background: linear-gradient(135deg, var(--sage-green) 0%, var(--muted-green) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .before-after-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .before-after-item {
+            position: relative;
+        }
+
+        .before-after-item h4 {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            z-index: 5;
+        }
+
+        .before-after-item .image-placeholder {
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(135deg, var(--sage-green) 0%, var(--muted-green) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+
+        .slide.grid-four {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 40px;
+            align-content: center;
+        }
+
+        .grid-item {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-top: 4px solid var(--sage-green);
+        }
+
+        .grid-item h3 {
+            color: var(--sage-green);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: normal;
+        }
+
+        .grid-item p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--deep-char);
+        }
+
+        .slide.destinations {
+            display: block;
+        }
+
+        .destinations-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .destination-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 2px solid var(--sage-green);
+        }
+
+        .destination-card h4 {
+            color: var(--sage-green);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            font-weight: normal;
+        }
+
+        .destination-card p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--deep-char);
+        }
+
+        .slide.revenue-streams {
+            display: block;
+        }
+
+        .revenue-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .revenue-card {
+            background: linear-gradient(135deg, var(--sage-green) 0%, var(--muted-green) 100%);
+            padding: 30px;
+            border-radius: 8px;
+            color: white;
+        }
+
+        .revenue-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: normal;
+            border-bottom: 2px solid var(--honey-gold);
+            padding-bottom: 15px;
+        }
+
+        .revenue-card ul {
+            list-style: none;
+        }
+
+        .revenue-card li {
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .revenue-card li:before {
+            content: "→ ";
+            color: var(--honey-gold);
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .slide.roadmap {
+            display: block;
+        }
+
+        .roadmap-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .roadmap-phase {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+
+        .roadmap-phase::before {
+            content: attr(data-phase);
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: var(--sage-green);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .roadmap-phase h3 {
+            color: var(--sage-green);
+            margin-top: 20px;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: normal;
+        }
+
+        .roadmap-phase ul {
+            list-style: none;
+        }
+
+        .roadmap-phase li {
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--deep-char);
+        }
+
+        .roadmap-phase li:before {
+            content: "✓ ";
+            color: var(--honey-gold);
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .slide.closing {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, var(--sage-green) 0%, var(--muted-green) 100%);
+            color: white;
+        }
+
+        .slide.closing h2 {
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            line-height: 1.4;
+            font-weight: normal;
+        }
+
+        .slide.closing p {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }
+
+        .slide.closing .highlight {
+            color: var(--honey-gold);
+        }
+
+        /* Common slide elements */
+        h2 {
+            font-size: 3rem;
+            color: var(--sage-green);
+            margin-bottom: 40px;
+            font-weight: normal;
+        }
+
+        h1 {
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        /* Navigation */
+        .controls {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+            align-items: center;
+        }
+
+        button {
+            background: var(--sage-green);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        button:hover {
+            background: var(--muted-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            background: var(--honey-gold);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: var(--sage-green);
+            transition: width 0.6s ease;
+            z-index: 50;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .slide {
+                padding: 40px;
+            }
+
+            .slide.two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .before-after-container {
+                grid-template-columns: 1fr;
+            }
+
+            .destinations-grid,
+            .revenue-container,
+            .roadmap-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media print {
+            .controls,
+            .progress-bar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide 1: Title -->
+        <div class="slide title-slide active" style="background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.3) 100%), url('6CFB9843-D507-439D-ABB5-C347A77A8FCD.PNG') center/cover no-repeat; background-attachment: fixed; background-size: cover;" >
+            <h1>Argana Resort</h1>
+            <p class="tagline">Where Island Calm Meets Home</p>
+            <p style="font-size: 1.5rem; margin-top: 40px;">From overlooked property to undiscovered destination</p>
+        </div>
+
+        <!-- Slide 2: The Current Reality -->
+        <div class="slide">
+            <div style="width: 100%; display: flex; flex-direction: column;">
+                <h2>The Current Reality</h2>
+                <h3 style="color: var(--honey-gold); font-size: 1.8rem; margin-bottom: 30px;">Low bookings. High maintenance anxiety.</h3>
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-bottom: 30px; max-height: 450px;">
+                    <div style="overflow: hidden; border-radius: 8px;"><img src="IMG_6195.jpg" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                    <div style="overflow: hidden; border-radius: 8px;"><img src="IMG_6196.jpg" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                    <div style="overflow: hidden; border-radius: 8px;"><img src="IMG_6197.jpg" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                    <div style="overflow: hidden; border-radius: 8px;"><img src="IMG_6198.jpg" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                    <div style="overflow: hidden; border-radius: 8px;"><img src="IMG_6200.jpg" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                </div>
+                <p style="font-size: 1rem; line-height: 1.8; color: var(--deep-char);">Market perception problem, not a property problem. The cost of invisibility is steep. What guests never see cannot attract them. <strong>The gap:</strong> Online presence + strategic positioning</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Hidden Assets -->
+        <div class="slide">
+            <div style="width: 100%; display: flex; flex-direction: column;">
+                <h2>What We Actually Have</h2>
+                <h3 style="color: var(--honey-gold); font-size: 1.8rem; margin-bottom: 30px;">Hidden Assets</h3>
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-bottom: 30px; max-height: 450px;">
+                    <div style="overflow: hidden; border-radius: 8px;"><img src="21927870-AFC8-4056-A5FF-90D30DD76D6D.PNG" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                    <div style="overflow: hidden; border-radius: 8px;"><img src="37406ECD-2A88-496F-BA8E-407D80891744.PNG" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                    <div style="overflow: hidden; border-radius: 8px;"><img src="6CFB9843-D507-439D-ABB5-C347A77A8FCD.PNG" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                    <div style="overflow: hidden; border-radius: 8px;"><img src="ABC5992C-7D6C-4B21-846C-619E2F9638A3.PNG" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                    <div style="overflow: hidden; border-radius: 8px;"><img src="F3BC7C72-B158-470E-B670-98255923A825.PNG" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                    <div>
+                        <h4 style="color: var(--sage-green); font-size: 1.2rem; margin-bottom: 10px;">Strategic Location</h4>
+                        <p>Walking distance to Dauin Beach. 30 min from Dumaguete. Quality foundations. Mature landscaping.</p>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--sage-green); font-size: 1.2rem; margin-bottom: 10px;">Character & Authenticity</h4>
+                        <p>Guests crave genuine tropical experience. Low maintenance potential with proper positioning.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Bedroom Transformation -->
+        <div class="slide">
+            <div style="width: 100%; height: 100%; display: flex; flex-direction: column; padding: 60px; gap: 20px;">
+                <div>
+                    <h2 style="margin-bottom: 5px;">Transformation Through Styling</h2>
+                    <h3 style="color: var(--honey-gold); font-size: 1.5rem; margin: 0;">Before & After: Bedroom</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; flex-grow: 1; min-height: 0;">
+                    <div style="overflow: hidden; border-radius: 8px;"><img src="IMG_6195.jpg" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                    <div style="overflow: hidden; border-radius: 8px;"><img src="F3BC7C72-B158-470E-B670-98255923A825.PNG" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                </div>
+                <p style="font-size: 0.95rem; line-height: 1.6; color: var(--deep-char); margin: 0; padding-top: 10px;"><strong>Investment:</strong> New linens, curtains, lighting, decor | <strong>Impact:</strong> Dramatic perceived value increase with minimal cost</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Entrance Transformation -->
+        <div class="slide">
+            <div style="width: 100%; height: 100%; display: flex; flex-direction: column; padding: 60px; gap: 20px;">
+                <div>
+                    <h2 style="margin-bottom: 5px;">Transformation Through Styling</h2>
+                    <h3 style="color: var(--honey-gold); font-size: 1.5rem; margin: 0;">Before & After: Entrance</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; flex-grow: 1; min-height: 0;">
+                    <div style="overflow: hidden; border-radius: 8px;"><img src="IMG_6197.jpg" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                    <div style="overflow: hidden; border-radius: 8px;"><img src="21927870-AFC8-4056-A5FF-90D30DD76D6D.PNG" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                </div>
+                <p style="font-size: 0.95rem; line-height: 1.6; color: var(--deep-char); margin: 0; padding-top: 10px;"><strong>Key insight:</strong> First impression sets the entire guest experience. Small changes create massive impact.</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Garden Paths Transformation -->
+        <div class="slide">
+            <div style="width: 100%; height: 100%; display: flex; flex-direction: column; padding: 60px; gap: 20px;">
+                <div>
+                    <h2 style="margin-bottom: 5px;">Transformation Through Styling</h2>
+                    <h3 style="color: var(--honey-gold); font-size: 1.5rem; margin: 0;">Before & After: Garden Paths</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; flex-grow: 1; min-height: 0;">
+                    <div style="overflow: hidden; border-radius: 8px;"><img src="IMG_6198.jpg" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                    <div style="overflow: hidden; border-radius: 8px;"><img src="6CFB9843-D507-439D-ABB5-C347A77A8FCD.PNG" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                </div>
+                <p style="font-size: 0.95rem; line-height: 1.6; color: var(--deep-char); margin: 0; padding-top: 10px;"><strong>Strategy:</strong> Warm lighting + thoughtful landscaping = inviting atmosphere. No renovation needed—just intentional design.</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: Exterior Presence -->
+        <div class="slide">
+            <div style="width: 100%; height: 100%; display: flex; flex-direction: column; padding: 60px; gap: 20px;">
+                <div>
+                    <h2 style="margin-bottom: 5px;">Transformation Through Styling</h2>
+                    <h3 style="color: var(--honey-gold); font-size: 1.5rem; margin: 0;">Before & After: Exterior Evening Presence</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; flex-grow: 1; min-height: 0;">
+                    <div style="overflow: hidden; border-radius: 8px;"><img src="IMG_6194.jpg" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                    <div style="overflow: hidden; border-radius: 8px;"><img src="ABC5992C-7D6C-4B21-846C-619E2F9638A3.PNG" style="width: 100%; height: 100%; object-fit: contain;"></div>
+                </div>
+                <p style="font-size: 0.95rem; line-height: 1.6; color: var(--deep-char); margin: 0; padding-top: 10px;"><strong>Evening is critical:</strong> Warm lighting transforms perception. Same structure, completely different feeling. This is how luxury resorts capture guests.</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Why Travelers Love This -->
+        <div class="slide" style="overflow-y: auto; padding: 25px;">
+            <div style="width: 100%; display: flex; flex-direction: column; height: 100%;">
+                <h2 style="margin-bottom: 2px; font-size: 1.8rem;">Why Travelers Love This</h2>
+                <p style="font-size: 0.9rem; color: var(--deep-char); margin-bottom: 10px;"><strong>Convenience Meets Authentic Experience</strong></p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex-grow: 1; margin-bottom: 70px;">
+                    <div class="grid-item" style="position: relative; overflow: hidden; display: flex; flex-direction: column;">
+                        <img src="dauin.png" style="width: 100%; height: 160px; object-fit: cover; border-radius: 5px 5px 0 0;">
+                        <div style="padding: 12px; flex-grow: 1; display: flex; flex-direction: column;">
+                            <h3 style="color: var(--sage-green); font-size: 0.9rem; margin: 0 0 5px 0;">Convenient Location</h3>
+                            <p style="font-size: 0.75rem; line-height: 1.15; margin: 0;">Walking distance to Dauin Beach. 30 min from Dumaguete.</p>
+                        </div>
+                    </div>
+                    <div class="grid-item" style="position: relative; overflow: hidden; display: flex; flex-direction: column;">
+                        <img src="8DAuGnTQCLptHK3w4rkxUZtJib5arEufBivpWRa3CdBRH7NCWTx1A7GqnNhDjBv6R8S1eBYeFQwakgWdFnrjRfSRy8iAUmzZRu94jFUnVqWWumB1o6CWWWSGa3pQNTgSooAVNPS5g7EtuRwN7RcZC2wYaUMPfVDQ3n4pC9AtJFR.webp" style="width: 100%; height: 160px; object-fit: cover; border-radius: 5px 5px 0 0;">
+                        <div style="padding: 12px; flex-grow: 1; display: flex; flex-direction: column;">
+                            <h3 style="color: var(--sage-green); font-size: 0.9rem; margin: 0 0 5px 0;">Authentic Experience</h3>
+                            <p style="font-size: 0.75rem; line-height: 1.15; margin: 0;">Genuine tropical lifestyle. Rich cultural immersion.</p>
+                        </div>
+                    </div>
+                    <div class="grid-item" style="position: relative; overflow: hidden; display: flex; flex-direction: column;">
+                        <img src="F3BC7C72-B158-470E-B670-98255923A825.PNG" style="width: 100%; height: 160px; object-fit: cover; border-radius: 5px 5px 0 0;">
+                        <div style="padding: 12px; flex-grow: 1; display: flex; flex-direction: column;">
+                            <h3 style="color: var(--sage-green); font-size: 0.9rem; margin: 0 0 5px 0;">Premium Perception</h3>
+                            <p style="font-size: 0.75rem; line-height: 1.15; margin: 0;">Luxury aesthetic. Boutique, not budget.</p>
+                        </div>
+                    </div>
+                    <div class="grid-item" style="position: relative; overflow: hidden; display: flex; flex-direction: column;">
+                        <img src="how-tourism-marketing-benefits-businesses.jpg" style="width: 100%; height: 160px; object-fit: cover; object-position: center 30%; border-radius: 5px 5px 0 0;">
+                        <div style="padding: 12px; flex-grow: 1; display: flex; flex-direction: column;">
+                            <h3 style="color: var(--sage-green); font-size: 0.9rem; margin: 0 0 5px 0;">Target Market</h3>
+                            <p style="font-size: 0.75rem; line-height: 1.15; margin: 0;">Digital nomads, couples, nature lovers, remote workers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Nearby Destinations -->
+        <div class="slide destinations" style="background: linear-gradient(135deg, rgba(143, 187, 159, 0.35) 0%, rgba(123, 168, 154, 0.35) 100%), url('21927870-AFC8-4056-A5FF-90D30DD76D6D.PNG') center/cover no-repeat; background-attachment: fixed;">
+            <h2 style="color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.3);">Gateway to Negros Oriental Adventures</h2>
+            <div class="destinations-grid">
+                <div class="destination-card">
+                    <h4>Apo Island</h4>
+                    <p>Marine tours, diving, snorkeling with vibrant coral reefs</p>
+                </div>
+                <div class="destination-card">
+                    <h4>Dauin Marine Sanctuary</h4>
+                    <p>Pristine underwater biodiversity, perfect for diving</p>
+                </div>
+                <div class="destination-card">
+                    <h4>Casaroro Falls</h4>
+                    <p>Hiking adventure through lush forests to stunning waterfall</p>
+                </div>
+                <div class="destination-card">
+                    <h4>Pulangbato Falls & Hot Spring</h4>
+                    <p>Red rock formation, natural hot spring, scenic exploration</p>
+                </div>
+                <div class="destination-card">
+                    <h4>Twin Lakes Balinsasayao</h4>
+                    <p>Scenic twin lakes, trekking, pristine nature</p>
+                </div>
+                <div class="destination-card">
+                    <h4>Valencia & Dumaguete</h4>
+                    <p>Cool mountain retreat, shopping, cultural sites, Rizal Boulevard</p>
+                </div>
+                <div class="destination-card">
+                    <h4>Silliman University</h4>
+                    <p>Historic campus, cultural significance, educational tours</p>
+                </div>
+                <div class="destination-card">
+                    <h4>Public Market Painitan</h4>
+                    <p>Authentic local experience, fresh tropical fruits, local crafts</p>
+                </div>
+                <div class="destination-card">
+                    <h4>Sibulan</h4>
+                    <p>Charming town access, gateway to island exploration</p>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 40px; font-size: 1.1rem; color: var(--honey-gold);"><strong>Position Argana as the basecamp for island exploration.</strong></p>
+        </div>
+
+        <!-- Slide 10: Revenue Streams -->
+        <div class="slide revenue-streams" style="background: linear-gradient(135deg, rgba(143, 187, 159, 0.55) 0%, rgba(123, 168, 154, 0.55) 100%), url('21927870-AFC8-4056-A5FF-90D30DD76D6D.PNG') center/cover no-repeat; background-attachment: fixed;">
+            <h2 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.6);">Unlock Additional Revenue Streams</h2>
+            <div class="revenue-container">
+                <div class="revenue-card">
+                    <h3>Experiences</h3>
+                    <ul>
+                        <li>Guided island tours</li>
+                        <li>Snorkeling & diving packages</li>
+                        <li>Waterfall hiking expeditions</li>
+                        <li>Beach cleanup tours</li>
+                        <li>Cultural immersion activities</li>
+                    </ul>
+                </div>
+                <div class="revenue-card">
+                    <h3>Services</h3>
+                    <ul>
+                        <li>Airport transfers</li>
+                        <li>Motorcycle rentals</li>
+                        <li>Breakfast packages</li>
+                        <li>Romantic room setup</li>
+                        <li>Laundry & housekeeping</li>
+                    </ul>
+                </div>
+                <div class="revenue-card">
+                    <h3>Stays</h3>
+                    <ul>
+                        <li>Long-term rentals</li>
+                        <li>Monthly discounts</li>
+                        <li>Remote work packages</li>
+                        <li>Seasonal promotions</li>
+                        <li>Group/family packages</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 40px; font-size: 1.1rem; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.6);"><strong>Each category adds margin without structural investment.</strong></p>
+        </div>
+
+        <!-- Slide 11: Marketing Roadmap -->
+        <div class="slide roadmap" style="background: linear-gradient(135deg, rgba(143, 187, 159, 0.55) 0%, rgba(123, 168, 154, 0.55) 100%), url('21927870-AFC8-4056-A5FF-90D30DD76D6D.PNG') center/cover no-repeat; background-attachment: fixed;">
+            <h2 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.6);">The Branding & Marketing Roadmap</h2>
+            <p style="font-size: 1.2rem; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.6); margin-bottom: 30px;"><strong>90-Day Quick Win Strategy</strong></p>
+            <div class="roadmap-container">
+                <div class="roadmap-phase" data-phase="Phase 1">
+                    <h3>Foundation (Weeks 1-4)</h3>
+                    <ul>
+                        <li>Facebook Business Page setup</li>
+                        <li>Google Business Profile optimization</li>
+                        <li>Professional photography shoot</li>
+                        <li>Brand messaging finalized</li>
+                        <li>Website refresh (or simple landing page)</li>
+                    </ul>
+                </div>
+                <div class="roadmap-phase" data-phase="Phase 2">
+                    <h3>Expansion (Weeks 5-8)</h3>
+                    <ul>
+                        <li>Airbnb listing launch</li>
+                        <li>Agoda listing launch</li>
+                        <li>Booking.com integration</li>
+                        <li>Review collection campaign</li>
+                        <li>Initial paid ads (Facebook)</li>
+                    </ul>
+                </div>
+                <div class="roadmap-phase" data-phase="Phase 3">
+                    <h3>Growth (Weeks 9-12)</h3>
+                    <ul>
+                        <li>Social media content calendar</li>
+                        <li>Weekly Instagram posts</li>
+                        <li>Promotional campaigns</li>
+                        <li>Seasonal package launches</li>
+                        <li>Guest testimonial collection</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 40px; font-size: 1.1rem; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.6);"><strong>Investment: Primarily time and strategic thinking. No renovation required.</strong></p>
+        </div>
+
+        <!-- Slide 12: Closing -->
+        <div class="slide closing" style="background: linear-gradient(135deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.15) 100%), url('ABC5992C-7D6C-4B21-846C-619E2F9638A3.PNG') center / cover no-repeat; background-attachment: fixed;">
+            <h2>Argana Resort Is Not a Liability</h2>
+            <p>It is an <span class="highlight">undiscovered destination</span></p>
+            <p style="margin-top: 40px; font-size: 1.2rem; line-height: 1.8;">The problem was never the property.<br>It was invisibility.<br><br>The solution is not renovation.<br>It is <span class="highlight">revelation</span>.</p>
+            <p style="margin-top: 40px; font-size: 1.1rem;">Small investments in styling and strategy will unlock the value already here.</p>
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+        <div class="slide-counter"><span id="currentSlide">1</span> / <span id="totalSlides">12</span></div>
+        <button id="nextBtn" onclick="changeSlide(1)">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = document.querySelectorAll('.slide').length;
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            
+            if (n > totalSlides) currentSlide = totalSlides;
+            if (n < 1) currentSlide = 1;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            
+            document.getElementById('currentSlide').textContent = currentSlide;
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            const progress = (currentSlide / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function changeSlide(n) {
+            currentSlide += n;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                changeSlide(1);
+            }
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                changeSlide(-1);
+            }
+        });
+
+        // Initialize
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>
